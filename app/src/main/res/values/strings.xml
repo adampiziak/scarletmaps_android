@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Scarletmaps</string>
+    <string name="route_list_loading_message">Loading Routes</string>
+    <string name="route_list_refreshing_message">Refreshing Routes</string>
+</resources>

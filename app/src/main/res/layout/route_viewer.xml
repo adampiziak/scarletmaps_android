@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/route_viewer_root"
+    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:background="#FFF"
+    android:clipChildren="false"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/route_viewer_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/route_viewer_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:background="@android:color/white"
+            android:padding="20dp"
+            android:textColor="#222"
+            android:elevation="4dp"
+            tools:text="ROUTE A" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/route_viewer_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#FFF"/>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
