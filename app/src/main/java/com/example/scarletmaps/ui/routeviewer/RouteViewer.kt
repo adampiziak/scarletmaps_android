@@ -5,25 +5,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.LinearInterpolator
-import android.view.animation.PathInterpolator
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.interpolator.view.animation.FastOutLinearInInterpolator
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.TransitionInflater
 import com.example.scarletmaps.R
-import com.example.scarletmaps.ui.routelist.RouteListAdapter
-import com.google.android.material.transition.Hold
 import com.google.android.material.transition.MaterialContainerTransform
-import com.google.android.material.transition.MaterialFade
-import com.google.android.material.transition.MaterialFadeThrough
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -51,7 +42,6 @@ class RouteViewer : Fragment() {
         val v = inflater.inflate(R.layout.route_viewer, container, false)
         setupSharedTransition(v)
 
-
         // Setup RecyclerView
         val recyclerView = v.findViewById<RecyclerView>(R.id.route_viewer_recyclerview)
         val viewAdapter = RouteViewerAdapter(ArrayList(), ArrayList())
@@ -60,6 +50,16 @@ class RouteViewer : Fragment() {
 
         viewModel.route.observe(viewLifecycleOwner, Observer {
             v.findViewById<TextView>(R.id.route_viewer_name).text= it.name
+
+            var area_message = ""
+            it.areas.forEachIndexed { i, a ->
+                if (i == it.areas.size - 1) {
+                    area_message += "${a.split(" ").joinToString(" ") { it.capitalize() }.trimEnd()}"
+                } else {
+                    area_message += "${a.split(" ").joinToString(" ") { it.capitalize() }.trimEnd()}, "
+                }
+            }
+            v.findViewById<TextView>(R.id.route_viewer_areas).text = area_message
         })
 
         viewModel.getFilteredList().observe(viewLifecycleOwner, Observer {

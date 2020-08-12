@@ -38,11 +38,6 @@ class StopList : Fragment() {
             layoutManager = viewManager
             adapter = viewAdapter
         }
-        val mDividerItemDecoration = DividerItemDecoration(
-            recyclerView.context,
-            viewManager.orientation
-        )
-        recyclerView.addItemDecoration(mDividerItemDecoration)
 
         // Get data from repository
         viewModel.stops.observe(viewLifecycleOwner, Observer<List<Stop>> { stops ->

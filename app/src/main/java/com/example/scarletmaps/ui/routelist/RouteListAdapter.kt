@@ -41,9 +41,9 @@ class RouteListAdapter(private var myDataset: ArrayList<Route>) :
         var area_message = ""
         myDataset[position].areas.forEachIndexed { i, a ->
             if (i == myDataset[position].areas.size - 1) {
-                area_message += " ${a.split(" ").joinToString(" ") { it.capitalize() }.trimEnd()}"
+                area_message += "${a.split(" ").joinToString(" ") { it.capitalize() }.trimEnd()}"
             } else {
-                area_message += " ${a.split(" ").joinToString(" ") { it.capitalize() }.trimEnd()},"
+                area_message += "${a.split(" ").joinToString(" ") { it.capitalize() }.trimEnd()}, "
             }
         }
         holder.areas.text = area_message
