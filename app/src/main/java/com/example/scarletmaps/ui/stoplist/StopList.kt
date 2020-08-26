@@ -12,8 +12,10 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.epoxy.EpoxyRecyclerView
 import com.example.scarletmaps.R
 import com.example.scarletmaps.data.models.stop.Stop
+import com.example.scarletmaps.ui.epoxy.HomeController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.stoplist.*
 
@@ -33,15 +35,21 @@ class StopList : Fragment() {
         // Set up RecyclerView
         val viewAdapter = StopListAdapter(ArrayList())
         val viewManager = LinearLayoutManager(activity)
-        val recyclerView = v.findViewById<RecyclerView>(R.id.stop_list_recyclerview)
+        val recyclerView = v.findViewById<EpoxyRecyclerView>(R.id.stop_list_recyclerview)
+        val controller = HomeController()
+        recyclerView.setController(controller)
+/*
         recyclerView.apply {
             layoutManager = viewManager
             adapter = viewAdapter
         }
 
+ */
+
         // Get data from repository
         viewModel.stops.observe(viewLifecycleOwner, Observer<List<Stop>> { stops ->
-            viewAdapter.setStops(stops.sortedBy { it.name })
+            //viewAdapter.setStops(stops.sortedBy { it.name })
+            controller.stopList = stops
         })
 
         viewModel.loaded.observe(viewLifecycleOwner, Observer<Boolean> { loaded ->

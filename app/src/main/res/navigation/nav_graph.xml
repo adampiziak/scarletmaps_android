@@ -7,10 +7,10 @@
         android:id="@+id/fragmentNearMe"
         android:name="com.example.scarletmaps.ui.nearby.Nearby"
         android:label="FragmentNearMe"
-        tools:layout="@layout/fragment_near_me">
+        tools:layout="@layout/nearby">
         <action
-            android:id="@+id/action_fragmentNearMe_to_testFragment"
-            app:destination="@id/testFragment" />
+            android:id="@+id/action_fragmentNearMe_to_routeView"
+            app:destination="@id/routeView" />
     </fragment>
     <fragment
         android:id="@+id/fragmentRouteList"
@@ -19,8 +19,7 @@
         tools:layout="@layout/routelist">
         <action
             android:id="@+id/action_fragmentRouteList_to_routeView"
-            app:destination="@id/routeView"
-            app:enterAnim="@anim/nav_default_enter_anim" />
+            app:destination="@id/routeView" />
     </fragment>
     <fragment
         android:id="@+id/fragmentStopList"
@@ -42,7 +41,8 @@
             app:destination="@id/fragmentRouteList" />
     </fragment>
     <fragment
-        android:id="@+id/testFragment"
-        android:name="com.example.scarletmaps.ui.TestFragment"
-        android:label="TestFragment" />
+        android:id="@+id/buildingList"
+        tools:layout="@layout/buildinglist"
+        android:name="com.example.scarletmaps.ui.buildinglist.BuildingList"
+        android:label="BuildingList" />
 </navigation>

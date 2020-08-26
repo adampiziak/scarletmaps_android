@@ -12,7 +12,6 @@
         android:textSize="26sp"
         android:textStyle="bold"
         android:padding="20dp"
-
         tools:text="ROUTE A"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,24 +14,38 @@ class DataUtils @Inject constructor(application: Application) {
         application.getSharedPreferences("scarletmaps_state", Context.MODE_PRIVATE)
     private var routeListUpdated: Long
     private var stopListUpdated: Long
+    private var buildingListUpdated: Long
 
     init {
         routeListUpdated = prefs.getLong("route_list_updated", 0)
         stopListUpdated = prefs.getLong("stop_list_updated", 0)
+        buildingListUpdated = prefs.getLong("building_list_updated", 0)
     }
 
     fun shouldRefreshRouteList(): Boolean {
-        val timeout = TimeUnit.MINUTES.toMillis(10)
+        val timeout = TimeUnit.MINUTES.toMillis(5)
         val now = now().toEpochMilli()
 
         return now - routeListUpdated > timeout
     }
 
     fun shouldRefreshStopList(): Boolean {
-        val timeout = TimeUnit.MINUTES.toMillis(10)
+        val timeout = TimeUnit.MINUTES.toMillis(5)
         val now = now().toEpochMilli()
 
         return now - stopListUpdated > timeout
+    }
+
+    fun shouldRefreshBuildingList(): Boolean {
+        val timeout = TimeUnit.MINUTES.toMillis(60*48)
+        val now = now().toEpochMilli()
+
+        return now - buildingListUpdated > timeout
+    }
+
+    fun setBuildingListUpdateTime() {
+        buildingListUpdated = now().toEpochMilli()
+        prefs.edit().putLong("building_list_updated", buildingListUpdated).apply()
     }
 
     fun setRouteListUpdateTime() {

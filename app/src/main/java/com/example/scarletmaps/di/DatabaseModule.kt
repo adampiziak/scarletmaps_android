@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.example.scarletmaps.data.local.ScarletMapsDatabase
 import com.example.scarletmaps.data.models.arrival.Arrival
 import com.example.scarletmaps.data.models.arrival.ArrivalDao
+import com.example.scarletmaps.data.models.building.BuildingDao
 import com.example.scarletmaps.data.models.route.RouteDao
 import com.example.scarletmaps.data.models.stop.StopDao
 import dagger.Module
@@ -38,5 +39,11 @@ class DatabaseModule {
     @Singleton
     fun provideArrivalDao(scarletmapsDatabase: ScarletMapsDatabase): ArrivalDao {
         return scarletmapsDatabase.arrivalDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideBuildingDao(scarletmapsDatabase: ScarletMapsDatabase): BuildingDao {
+        return scarletmapsDatabase.buildingDao()
     }
 }

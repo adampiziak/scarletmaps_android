@@ -11,6 +11,22 @@ class Converters {
     private val converter = Gson();
 
     @TypeConverter
+    fun fromLocation(value: Location): String {
+        return converter.toJson(value)
+    }
+
+
+    @TypeConverter
+    fun toLocation(value: String): Location {
+        if (value == null) {
+            return Location(0.0, 0.0)
+        }
+
+        val locationType: Type = object: TypeToken<Location>() {}.type
+        return converter.fromJson(value, locationType)
+    }
+
+    @TypeConverter
     fun fromList(value: List<Int>): String {
         return converter.toJson(value)
     }

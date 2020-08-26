@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
     android:layout_width="match_parent">
     <TextView
         android:id="@+id/route_stop_name"
@@ -32,13 +34,16 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="20dp"
         android:paddingBottom="20dp"
+        android:textColor="#000"
         app:layout_constraintTop_toBottomOf="@id/route_stop_area"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:text="10 years"/>
 
     <View
+        android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:background="#F5F5F5"/>
+        android:background="#F5F5F5"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

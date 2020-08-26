@@ -7,11 +7,14 @@ import com.example.scarletmaps.data.local.DataUtils
 import com.example.scarletmaps.data.models.NetworkStatus
 import com.example.scarletmaps.data.models.arrival.Arrival
 import com.example.scarletmaps.data.models.arrival.ArrivalDao
+import com.example.scarletmaps.data.models.building.Building
+import com.example.scarletmaps.data.models.building.BuildingDao
 import com.example.scarletmaps.data.models.route.Route
 import com.example.scarletmaps.data.models.route.RouteDao
 import com.example.scarletmaps.data.models.stop.Stop
 import com.example.scarletmaps.data.models.stop.StopDao
 import com.example.scarletmaps.data.remote.ScarletMapsService
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,13 +28,45 @@ class ScarletMapsRepository @Inject constructor(
     private val dataUtils: DataUtils,
     private val routeDao: RouteDao,
     private val stopDao: StopDao,
-    private val arrivalDao: ArrivalDao
+    private val arrivalDao: ArrivalDao,
+    private val buildingDao: BuildingDao
 ) {
 
     private val routeListLoaded = MutableLiveData(true)
     private val stopListLoaded = MutableLiveData(true)
     private val routeArrivalsStatus: HashMap<Int, MutableLiveData<NetworkStatus>> = HashMap()
 
+    init {
+        arrivalDao.clear()
+    }
+
+    fun getBuildingList(): ArrayList<Building> {
+        validateBuildingList()
+        return ArrayList(buildingDao.allImmediate())
+    }
+
+    private fun validateBuildingList() {
+        if (dataUtils.shouldRefreshBuildingList()) {
+            scarletmapsService.buildings().enqueue(object : Callback<List<Building>> {
+                override fun onFailure(call: Call<List<Building>>, t: Throwable) {
+
+                }
+
+                override fun onResponse(
+                    call: Call<List<Building>>,
+                    response: Response<List<Building>>
+                ) {
+                    val buildings = response.body()
+                    if (buildings != null) {
+                        for (building in response.body()!!) {
+                            buildingDao.save(building)
+                        }
+                        dataUtils.setBuildingListUpdateTime()
+                    }
+                }
+            })
+        }
+    }
     fun getRouteList(): LiveData<List<Route>> {
         validateRouteList()
         return routeDao.getAll()
@@ -53,6 +88,10 @@ class ScarletMapsRepository @Inject constructor(
         return routeDao.get(id)
     }
 
+    fun getArrivalPair(route: Int, stop: Int): Arrival? {
+        return arrivalDao.getPair(route, stop)
+    }
+
     fun refreshRouteArrivals(id: Int) {
         if (!routeArrivalsStatus.containsKey(id)) {
             routeArrivalsStatus[id] = MutableLiveData(NetworkStatus.SUCCESS)
@@ -64,8 +103,11 @@ class ScarletMapsRepository @Inject constructor(
             }
 
             override fun onResponse(call: Call<List<Arrival>>, response: Response<List<Arrival>>) {
-                for (arrival in response.body()!!) {
-                    arrivalDao.save(arrival)
+                val arrivals = response.body()
+                if (arrivals != null) {
+                    for (arrival in response.body()!!) {
+                        arrivalDao.save(arrival)
+                    }
                 }
                 routeArrivalsStatus[id] = MutableLiveData(NetworkStatus.SUCCESS)
             }
@@ -97,10 +139,13 @@ class ScarletMapsRepository @Inject constructor(
 
             scarletmapsService.getRoutes().enqueue(object : Callback<List<Route>> {
                 override fun onResponse(call: Call<List<Route>>, response: Response<List<Route>>) {
-                    for (route in response.body()!!) {
-                        routeDao.save(route)
+                    val routes = response.body()
+                    if (routes != null) {
+                        for (route in response.body()!!) {
+                            routeDao.save(route)
+                        }
+                        dataUtils.setRouteListUpdateTime()
                     }
-                    dataUtils.setRouteListUpdateTime()
                     routeListLoaded.value = true
                 }
 
@@ -117,6 +162,11 @@ class ScarletMapsRepository @Inject constructor(
         return stopDao.getAll()
     }
 
+    fun getStopListImmediate(): List<Stop> {
+        validateStopList()
+        return stopDao.getAllImmediate()
+    }
+
     fun getStopListStatus(): LiveData<Boolean> {
         return stopListLoaded
     }
@@ -127,12 +177,15 @@ class ScarletMapsRepository @Inject constructor(
 
             scarletmapsService.getStops().enqueue(object : Callback<List<Stop>> {
                 override fun onResponse(call: Call<List<Stop>>, response: Response<List<Stop>>) {
-                    for (stop in response.body()!!) {
-                        stopDao.save(stop)
-                    }
+                    val body = response.body()
+                    if (body != null) {
+                        for (stop in body) {
+                            stopDao.save(stop)
+                        }
 
-                    dataUtils.setStopListUpdateTime()
-                    stopListLoaded.value = true
+                        dataUtils.setStopListUpdateTime()
+                        stopListLoaded.value = true
+                    }
                 }
 
                 override fun onFailure(call: Call<List<Stop>>, t: Throwable) {

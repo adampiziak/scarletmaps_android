@@ -13,7 +13,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.epoxy.EpoxyRecyclerView
 import com.example.scarletmaps.R
+import com.example.scarletmaps.data.models.stop.Stop
 import com.google.android.material.transition.MaterialContainerTransform
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -43,32 +45,38 @@ class RouteViewer : Fragment() {
         setupSharedTransition(v)
 
         // Setup RecyclerView
-        val recyclerView = v.findViewById<RecyclerView>(R.id.route_viewer_recyclerview)
-        val viewAdapter = RouteViewerAdapter(ArrayList(), ArrayList())
-        recyclerView.adapter = viewAdapter
-        recyclerView.layoutManager = LinearLayoutManager(activity)
-
-        viewModel.route.observe(viewLifecycleOwner, Observer {
-            v.findViewById<TextView>(R.id.route_viewer_name).text= it.name
-
-            var area_message = ""
-            it.areas.forEachIndexed { i, a ->
-                if (i == it.areas.size - 1) {
-                    area_message += "${a.split(" ").joinToString(" ") { it.capitalize() }.trimEnd()}"
-                } else {
-                    area_message += "${a.split(" ").joinToString(" ") { it.capitalize() }.trimEnd()}, "
-                }
-            }
-            v.findViewById<TextView>(R.id.route_viewer_areas).text = area_message
-        })
+        val recyclerView = v.findViewById<EpoxyRecyclerView>(R.id.route_viewer_recyclerview)
+        val controller = RouteViewerController(viewModel.routeImmediate)
+        recyclerView.setController(controller)
 
         viewModel.getFilteredList().observe(viewLifecycleOwner, Observer {
-            viewAdapter.setStops(it)
+            if (it.isEmpty()) {
+                return@Observer
+            }
+            var stopsByArea: ArrayList<ArrayList<Stop>> = ArrayList()
+            var currentAreaList: ArrayList<Stop> = ArrayList()
+            var currentArea = it[0].area
+            for (stop in it) {
+                if (stop.area == currentArea) {
+                    currentAreaList.add(stop)
+                } else {
+                    stopsByArea.add(ArrayList(currentAreaList))
+                    currentAreaList.clear()
+                    currentAreaList.add(stop)
+                    currentArea = stop.area
+                }
+            }
+            stopsByArea.add(ArrayList(currentAreaList))
+            controller.stopByArea = stopsByArea
+
+
+            //viewAdapter.setStops(it)
         })
 
         viewModel.arrivals.observe(viewLifecycleOwner, Observer {
-            viewAdapter.setArrivals(it)
+            //viewAdapter.setArrivals(it)
             Log.d("ADAMSKI", "setting ${it.size} arrivals")
+            controller.arrivals = ArrayList(it)
         })
         startPostponedEnterTransition()
 

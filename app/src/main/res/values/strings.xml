@@ -2,4 +2,9 @@
     <string name="app_name">Scarletmaps</string>
     <string name="route_list_loading_message">Loading Routes</string>
     <string name="route_list_refreshing_message">Refreshing Routes</string>
+    <string name="bottom_nav_nearby_title">Near me</string>
+    <string name="bottom_nav_routes_title">Routes</string>
+    <string name="bottom_nav_stops_title">Stops</string>
+    <string name="bottom_nav_buildings_title">Buildings</string>
+    <string name="message_no_active_transport_nearby">no active stops or routes near you</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.example.scarletmaps.data.remote
 
 import com.example.scarletmaps.data.models.arrival.Arrival
+import com.example.scarletmaps.data.models.building.Building
 import com.example.scarletmaps.data.models.route.Route
 import com.example.scarletmaps.data.models.stop.Stop
 import retrofit2.Call
@@ -18,4 +19,7 @@ interface ScarletMapsService {
 
     @GET("route_arrivals/{id}")
     fun arrivals(@Path("id") id: Int): Call<List<Arrival>>
+
+    @GET("buildings")
+    fun buildings(): Call<List<Building>>
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="20dp"
+    android:background="@color/colorPrimary"
+    android:elevation="4dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:paddingHorizontal="30dp"
+        android:id="@+id/route_name"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textAlignment="viewStart"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:textColor="#FFF"
+        android:textStyle="bold"
+        tools:text="Route LX"/>
+
+    <com.google.android.flexbox.FlexboxLayout
+        android:paddingHorizontal="30dp"
+        app:flexWrap="wrap"
+        app:alignContent="flex_start"
+        app:alignItems="flex_start"
+        android:id="@+id/epoxy_model_group_child_container"
+        android:layout_width="match_parent"
+        android:layout_marginTop="15dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/route_name"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

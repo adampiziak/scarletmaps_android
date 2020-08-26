@@ -42,9 +42,10 @@ class RouteViewerAdapter(private var stops: ArrayList<Stop>, private var arrival
 
         if (times != null) {
             holder.times.text = times
+            holder.itemView.alpha = 1.0f
         } else {
             holder.times.text = "no arrivals"
-            holder.times.setTypeface(holder.times.typeface, Typeface.ITALIC)
+            holder.itemView.alpha = 0.3f
         }
         val area = stops[position]
             .area.split(" ").joinToString(" ") { it.capitalize() }
@@ -70,10 +71,13 @@ class RouteViewerAdapter(private var stops: ArrayList<Stop>, private var arrival
     private fun getArrivalsText(stopId: Int): String? {
         val arrival = arrivals.find { it.stop_id == stopId }
         if (arrival != null) {
-            var message = "Arriving in "
+            var message = ""
             arrival.arrivals.forEachIndexed { i, a ->
                 val now: Long = Instant.now().toEpochMilli()
                 val difference = a - now
+                if (difference < 0 && i == arrivals.size - 1) {
+                    return null
+                }
                 if (difference < 0) {
                     return@forEachIndexed
                 }
