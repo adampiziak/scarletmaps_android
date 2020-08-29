@@ -25,7 +25,7 @@ class BuildingList : Fragment() {
         val recyclerView = v.findViewById<RecyclerView>(R.id.buildingListRecyclerView)
         recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)
-            adapter = BuildingListAdapter(viewModel.buildingList)
+            adapter = BuildingListAdapter(ArrayList(viewModel.buildingList.sortedBy { it.name }))
         }
         return v
     }

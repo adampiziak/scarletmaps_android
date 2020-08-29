@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:paddingHorizontal="30dp"
     android:text="Nearby routes"
+    android:focusable="false"
     android:textColor="#444"
     android:textStyle="bold"
     android:layout_marginTop="10dp"

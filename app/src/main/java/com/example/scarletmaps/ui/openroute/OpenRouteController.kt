@@ -1,4 +1,4 @@
-package com.example.scarletmaps.ui.routeviewer
+package com.example.scarletmaps.ui.openroute
 
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.example.scarletmaps.data.models.arrival.Arrival
@@ -6,7 +6,7 @@ import com.example.scarletmaps.data.models.route.Route
 import com.example.scarletmaps.data.models.stop.Stop
 import com.example.scarletmaps.ui.epoxy.*
 
-class RouteViewerController(routeInitial: Route): AsyncEpoxyController() {
+class OpenRouteController(routeInitial: Route): AsyncEpoxyController() {
     var route: Route = routeInitial
         set (value) {
             field = value
@@ -26,14 +26,7 @@ class RouteViewerController(routeInitial: Route): AsyncEpoxyController() {
 
     override fun buildModels() {
         var baseNumeral = 0;
-        val areaModels = route.areas.mapIndexed { i, v -> AreaItemModel_().apply {
-            id(v)
-            name(v)
-        } }
-        headerRouteViewer(areaModels) {
-            id(route.id)
-            route(route.name)
-        }
+
         stopByArea.forEachIndexed { i, lists ->
             val models = lists.mapIndexed { index, stop ->
                 val times = arrivals.find { it.stop_id == stop.id }

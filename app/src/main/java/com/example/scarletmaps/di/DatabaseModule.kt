@@ -7,6 +7,7 @@ import com.example.scarletmaps.data.models.arrival.Arrival
 import com.example.scarletmaps.data.models.arrival.ArrivalDao
 import com.example.scarletmaps.data.models.building.BuildingDao
 import com.example.scarletmaps.data.models.route.RouteDao
+import com.example.scarletmaps.data.models.segment.SegmentDao
 import com.example.scarletmaps.data.models.stop.StopDao
 import dagger.Module
 import dagger.Provides
@@ -45,5 +46,11 @@ class DatabaseModule {
     @Singleton
     fun provideBuildingDao(scarletmapsDatabase: ScarletMapsDatabase): BuildingDao {
         return scarletmapsDatabase.buildingDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSegmentDao(scarletmapsDatabase: ScarletMapsDatabase): SegmentDao {
+        return scarletmapsDatabase.segmentDao()
     }
 }

@@ -17,10 +17,4 @@
         android:icon="@drawable/ic_stop"
         android:title="@string/bottom_nav_stops_title"
         />
-
-    <item
-        android:id="@id/buildingList"
-        android:icon="@drawable/ic_place"
-        android:title="@string/bottom_nav_buildings_title"
-        />
 </menu>

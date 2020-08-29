@@ -4,6 +4,8 @@ import android.Manifest
 import android.app.Activity
 import android.location.Location
 import android.os.Bundle
+import android.view.View
+import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.navigation.findNavController
@@ -30,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         bottom_navigation.setupWithNavController(navController)
 
         requestForegroundPermissions(this)
+        setupViews()
     }
 
     private fun requestForegroundPermissions(context: Activity) {
@@ -42,16 +45,13 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.navigation_host)
         bottom_navigation.setupWithNavController(navController)
 
-        /*
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.routeView -> {
-                    bottom_navigation.windowInsetsController.setSystemBarsAppearance(APPEARANCE_LIGHT_STATUS_BARS, APPEARANCE_LIGHT_STATUS_BARS)
+                R.id.mapsFragment -> {
+                    bottom_navigation.visibility = View.GONE
                 }
                 else -> bottom_navigation.visibility = View.VISIBLE
             }
         }
-
-         */
     }
 }

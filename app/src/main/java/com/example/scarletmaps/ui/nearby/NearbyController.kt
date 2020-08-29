@@ -67,6 +67,7 @@ class NearbyController : AsyncEpoxyController() {
                     area(stop.first.area)
                     distance(stop.second)
                     order(index)
+                    stop(stop.first)
                 }
             }
         } else {

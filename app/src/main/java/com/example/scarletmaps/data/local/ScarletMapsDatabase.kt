@@ -10,14 +10,17 @@ import com.example.scarletmaps.data.models.building.Building
 import com.example.scarletmaps.data.models.building.BuildingDao
 import com.example.scarletmaps.data.models.route.Route
 import com.example.scarletmaps.data.models.route.RouteDao
+import com.example.scarletmaps.data.models.segment.Segment
+import com.example.scarletmaps.data.models.segment.SegmentDao
 import com.example.scarletmaps.data.models.stop.Stop
 import com.example.scarletmaps.data.models.stop.StopDao
 
-@Database(entities = [Route::class, Stop::class, Arrival::class, Building::class], version = 1)
+@Database(entities = [Route::class, Stop::class, Arrival::class, Building::class, Segment::class], version = 2)
 @TypeConverters(Converters::class)
 abstract class ScarletMapsDatabase : RoomDatabase() {
     abstract fun routeDao(): RouteDao
     abstract fun stopDao(): StopDao
     abstract fun arrivalDao(): ArrivalDao
     abstract fun buildingDao(): BuildingDao
+    abstract fun segmentDao(): SegmentDao
 }

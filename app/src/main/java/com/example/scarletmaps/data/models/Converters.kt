@@ -1,10 +1,10 @@
 package com.example.scarletmaps.data.models
 
 import androidx.room.TypeConverter
+import com.example.scarletmaps.data.models.location.Location
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
-import java.util.*
 import kotlin.collections.ArrayList
 
 class Converters {

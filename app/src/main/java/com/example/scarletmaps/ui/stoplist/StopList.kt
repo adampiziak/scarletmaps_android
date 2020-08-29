@@ -33,23 +33,14 @@ class StopList : Fragment() {
         val v = inflater.inflate(R.layout.stoplist, container, false)
 
         // Set up RecyclerView
-        val viewAdapter = StopListAdapter(ArrayList())
-        val viewManager = LinearLayoutManager(activity)
         val recyclerView = v.findViewById<EpoxyRecyclerView>(R.id.stop_list_recyclerview)
         val controller = HomeController()
         recyclerView.setController(controller)
-/*
-        recyclerView.apply {
-            layoutManager = viewManager
-            adapter = viewAdapter
-        }
-
- */
 
         // Get data from repository
         viewModel.stops.observe(viewLifecycleOwner, Observer<List<Stop>> { stops ->
             //viewAdapter.setStops(stops.sortedBy { it.name })
-            controller.stopList = stops
+            controller.stopList = stops.sortedBy { it.name }.filter { it.active }
         })
 
         viewModel.loaded.observe(viewLifecycleOwner, Observer<Boolean> { loaded ->

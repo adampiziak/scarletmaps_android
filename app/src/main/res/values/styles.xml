@@ -9,6 +9,7 @@
         <!-- Status Bar -->
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:statusBarColor">#EEE</item>
+
     </style>
 
     <style name="AppTheme.Splash" parent="Theme.MaterialComponents.Light.NoActionBar">

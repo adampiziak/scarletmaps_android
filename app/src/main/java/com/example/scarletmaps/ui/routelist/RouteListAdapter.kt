@@ -60,7 +60,7 @@ class RouteListAdapter(private var routeList: ArrayList<Route>) :
 
         holder.areas.text = areaMessage
         holder.itemView.setOnClickListener{ view ->
-            view.findNavController().navigate(R.id.routeView, bundleOf("id" to routeList[position].id), null,  null)
+            view.findNavController().navigate(R.id.mapsFragment, bundleOf("id" to routeList[position].id), null,  null)
         }
     }
 

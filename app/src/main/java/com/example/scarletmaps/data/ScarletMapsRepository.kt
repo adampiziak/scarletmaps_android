@@ -5,16 +5,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.scarletmaps.data.local.DataUtils
 import com.example.scarletmaps.data.models.NetworkStatus
+import com.example.scarletmaps.data.models.Vehicle
 import com.example.scarletmaps.data.models.arrival.Arrival
 import com.example.scarletmaps.data.models.arrival.ArrivalDao
 import com.example.scarletmaps.data.models.building.Building
 import com.example.scarletmaps.data.models.building.BuildingDao
 import com.example.scarletmaps.data.models.route.Route
 import com.example.scarletmaps.data.models.route.RouteDao
+import com.example.scarletmaps.data.models.segment.Segment
+import com.example.scarletmaps.data.models.segment.SegmentDao
 import com.example.scarletmaps.data.models.stop.Stop
 import com.example.scarletmaps.data.models.stop.StopDao
 import com.example.scarletmaps.data.remote.ScarletMapsService
-import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,7 +31,8 @@ class ScarletMapsRepository @Inject constructor(
     private val routeDao: RouteDao,
     private val stopDao: StopDao,
     private val arrivalDao: ArrivalDao,
-    private val buildingDao: BuildingDao
+    private val buildingDao: BuildingDao,
+    private val segmentDao: SegmentDao
 ) {
 
     private val routeListLoaded = MutableLiveData(true)
@@ -43,6 +46,10 @@ class ScarletMapsRepository @Inject constructor(
     fun getBuildingList(): ArrayList<Building> {
         validateBuildingList()
         return ArrayList(buildingDao.allImmediate())
+    }
+
+    fun getStop(id: Int): LiveData<Stop> {
+        return stopDao.load(id)
     }
 
     private fun validateBuildingList() {
@@ -67,6 +74,42 @@ class ScarletMapsRepository @Inject constructor(
             })
         }
     }
+
+    fun getRouteSegments(route: Route) : LiveData<List<Segment>> {
+        validateSegmentList()
+        return segmentDao.getSelected(route.segments)
+    }
+
+    fun getRouteSegmentsImmediate(route: Route) : List<Segment> {
+        validateSegmentList()
+        return segmentDao.getSelectedImmediate(route.segments)
+    }
+
+
+    private fun validateSegmentList() {
+        if (dataUtils.shouldRefreshSegmentList()) {
+            scarletmapsService.segments().enqueue(object : Callback<List<Segment>> {
+                override fun onResponse(call: Call<List<Segment>>, response: Response<List<Segment>>) {
+                    val segments = response.body()
+                    if (segments != null) {
+                        for (segment in response.body()!!) {
+                            segmentDao.save(segment)
+                        }
+                        dataUtils.setSegmentListUpdateTime()
+                    }
+                }
+
+                override fun onFailure(call: Call<List<Segment>>, t: Throwable) {
+                    Log.d("RETROFIT", t.message.toString())
+                }
+            })
+        }
+    }
+
+    fun getRouteStops(route: Route) : LiveData<List<Stop>> {
+        return stopDao.getSelected(route.stops)
+    }
+
     fun getRouteList(): LiveData<List<Route>> {
         validateRouteList()
         return routeDao.getAll()
@@ -111,8 +154,11 @@ class ScarletMapsRepository @Inject constructor(
                 }
                 routeArrivalsStatus[id] = MutableLiveData(NetworkStatus.SUCCESS)
             }
-
         })
+    }
+
+    fun getRouteVehicles(id: Int, callback: Callback<List<Vehicle>>) {
+        scarletmapsService.vehicles(id).enqueue(callback)
     }
 
     fun getRouteArrivals(id: Int): LiveData<List<Arrival>> {
@@ -130,7 +176,12 @@ class ScarletMapsRepository @Inject constructor(
 
     fun getRouteStops(id: Int): ArrayList<Stop> {
         val route = routeDao.get(id)
-        return ArrayList(stopDao.getSelected(route.stops))
+        return ArrayList(stopDao.getSelectedImmediate(route.stops))
+    }
+
+    fun getStopRoutes(id: Int): LiveData<List<Route>> {
+        val stop = stopDao.loadImmediate(id)
+        return routeDao.getSelected(stop.routes)
     }
 
     private fun validateRouteList() {

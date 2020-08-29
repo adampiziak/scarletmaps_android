@@ -1,7 +1,10 @@
 package com.example.scarletmaps.ui.epoxy
 
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.os.bundleOf
+import androidx.navigation.findNavController
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyHolder
 import com.airbnb.epoxy.EpoxyModelClass
@@ -20,16 +23,21 @@ abstract class StopItemModel : EpoxyModelWithHolder<StopItemModel.Holder>() {
         with(stop) {
             holder.name.text = name
             holder.area.text = area
+            holder.root.setOnClickListener {
+                it.findNavController().navigate(R.id.openStop, bundleOf("id" to stop.id))
+            }
         }
     }
 
     class Holder : EpoxyHolder() {
         lateinit var name: TextView
         lateinit var area: TextView
+        lateinit var root: LinearLayout
 
         override fun bindView(itemView: View) {
             name = itemView.findViewById(R.id.estop_name)
             area = itemView.findViewById(R.id.estop_area)
+            root = itemView.rootView as LinearLayout
         }
     }
 }

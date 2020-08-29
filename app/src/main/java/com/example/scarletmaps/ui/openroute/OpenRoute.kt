@@ -1,0 +1,218 @@
+package com.example.scarletmaps.ui.openroute
+
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import com.airbnb.epoxy.EpoxyRecyclerView
+import com.example.scarletmaps.R
+import com.example.scarletmaps.data.models.Vehicle
+import com.example.scarletmaps.data.models.stop.Stop
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.*
+import com.google.maps.android.PolyUtil
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+
+
+@AndroidEntryPoint
+class OpenRoute : Fragment() {
+    @Inject
+    lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
+    private val viewModel: OpenRouteViewModel by viewModels()
+    private var polylines: ArrayList<Polyline> = ArrayList()
+
+    data class VehicleMarker(val polyline: Polyline, val vehicle: Vehicle)
+    private var vehicleMarkers: HashMap<Int, Marker> = HashMap()
+
+    private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
+        return ContextCompat.getDrawable(context, vectorResId)?.run {
+            setBounds(0, 0, intrinsicWidth, intrinsicHeight)
+            val bitmap = Bitmap.createBitmap(
+                intrinsicWidth,
+                intrinsicHeight,
+                Bitmap.Config.ARGB_8888
+            )
+            draw(Canvas(bitmap))
+            BitmapDescriptorFactory.fromBitmap(bitmap)
+        }
+    }
+
+    private val callback = OnMapReadyCallback { googleMap ->
+        // Retrieve location updates if user has granted permission
+        val finePermission: Int = ActivityCompat.checkSelfPermission(
+            activity as AppCompatActivity,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+        val coarsePermission: Int = ActivityCompat.checkSelfPermission(
+            activity as AppCompatActivity,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+        if (finePermission == PackageManager.PERMISSION_GRANTED && coarsePermission == PackageManager.PERMISSION_GRANTED) {
+            googleMap.isMyLocationEnabled = true
+        }
+        viewModel.getFilteredList().observe(viewLifecycleOwner, Observer { stopList ->
+            stopList.forEach { stop ->
+                val markerPosition = LatLng(stop.location.lat, stop.location.lng)
+                googleMap.addMarker(
+                    MarkerOptions()
+                        .position(markerPosition)
+                        .title(stop.name)
+                )
+            }
+
+
+        })
+
+        viewModel.vehicles.observe(viewLifecycleOwner, Observer { vehicleList ->
+            vehicleMarkers.forEach { (key, value) ->
+                val vehicle = vehicleList.find { it.id == key }
+                if (vehicle == null) {
+                    value.remove()
+                } else {
+                    val vehiclePosition = LatLng(vehicle.location.lat, vehicle.location.lng)
+                    value.position = vehiclePosition
+                }
+            }
+
+            vehicleList.forEach { vehicle ->
+                if (!vehicleMarkers.containsKey(vehicle.id)) {
+                    val vehiclePosition = LatLng(vehicle.location.lat, vehicle.location.lng)
+                    val fragContext = context
+                    if (fragContext != null) {
+                        val marker = googleMap.addMarker(
+                            MarkerOptions()
+                                .position(vehiclePosition)
+                                .icon(bitmapDescriptorFromVector(fragContext, R.drawable.ic_bus))
+                        )
+
+                        vehicleMarkers.put(vehicle.id, marker)
+                    }
+                }
+            }
+        })
+
+
+        viewModel.segments.observe(viewLifecycleOwner, Observer { list ->
+            polylines.forEach {
+                it.remove()
+            }
+
+            list.forEach { segment ->
+                val options = PolylineOptions().width(5.0f)
+                val coordinatePath: List<LatLng> = PolyUtil.decode(segment.path)
+                coordinatePath.forEach {
+                    options.add(it)
+                }
+
+                polylines.add(googleMap.addPolyline(options))
+            }
+
+            zoomToPolylines(googleMap, polylines)
+        })
+    }
+
+    fun zoomToPolylines(googleMap: GoogleMap, polylines: ArrayList<Polyline>) {
+        val builder = LatLngBounds.builder()
+        var canBuild = false
+        for (polyline in polylines) {
+            for (point in polyline.points) {
+                builder.include(point)
+                canBuild = true
+            }
+        }
+        if (canBuild) {
+            val bounds = builder.build()
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+        }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val v = inflater.inflate(R.layout.route_open, container, false)
+
+        // Set name
+        val title = v.findViewById<TextView>(R.id.route_open_name)
+        val areas = v.findViewById<TextView>(R.id.route_open_areas)
+        title.text = viewModel.routeImmediate.name
+
+        var areaMessage = ""
+        viewModel.routeImmediate.areas.forEachIndexed { i, a ->
+            if (i == viewModel.routeImmediate.areas.size - 1) {
+                areaMessage += a.split(" ").joinToString(" ") { it.capitalize() }.trimEnd()
+            } else {
+                areaMessage += "${a.split(" ").joinToString(" ") { it.capitalize() }.trimEnd()}, "
+            }
+        }
+        areas.text = areaMessage
+
+        val recyclerView = v.findViewById<EpoxyRecyclerView>(R.id.route_viewer_recyclerview)
+        val controller = OpenRouteController(viewModel.routeImmediate)
+        recyclerView.setController(controller)
+        viewModel.getFilteredList().observe(viewLifecycleOwner, Observer {
+            if (it.isEmpty()) {
+                return@Observer
+            }
+            var stopsByArea: ArrayList<ArrayList<Stop>> = ArrayList()
+            var currentAreaList: ArrayList<Stop> = ArrayList()
+            var currentArea = it[0].area
+            for (stop in it) {
+                if (stop.area == currentArea) {
+                    currentAreaList.add(stop)
+                } else {
+                    stopsByArea.add(ArrayList(currentAreaList))
+                    currentAreaList.clear()
+                    currentAreaList.add(stop)
+                    currentArea = stop.area
+                }
+            }
+            stopsByArea.add(ArrayList(currentAreaList))
+            controller.stopByArea = stopsByArea
+
+
+            //viewAdapter.setStops(it)
+        })
+
+        viewModel.arrivals.observe(viewLifecycleOwner, Observer {
+            //viewAdapter.setArrivals(it)
+            Log.d("ADAMSKI", "setting ${it.size} arrivals")
+            controller.arrivals = ArrayList(it)
+        })
+
+        return v
+    }
+
+    fun pxToDp(px: Int): Int {
+        return (px / Resources.getSystem().displayMetrics.density).toInt()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+        mapFragment?.getMapAsync(callback)
+
+
+    }
+}

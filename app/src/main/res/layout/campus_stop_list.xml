@@ -18,7 +18,8 @@
         android:gravity="center_vertical"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="0dp"
-        android:textColor="#222"
+        android:textColor="#445"
+        android:textStyle="bold"
         tools:text="College Ave"/>
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"

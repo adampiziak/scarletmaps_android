@@ -15,6 +15,9 @@ interface StopDao {
     @Query("SELECT * FROM stop WHERE id = :stopId")
     fun load(stopId: Int): LiveData<Stop>
 
+    @Query("SELECT * FROM stop WHERE id = :stopId")
+    fun loadImmediate(stopId: Int): Stop
+
     @Query("SELECT * FROM stop")
     fun getAll(): LiveData<List<Stop>>
 
@@ -22,5 +25,8 @@ interface StopDao {
     fun getAllImmediate(): List<Stop>
 
     @Query("SELECT * FROM stop WHERE id IN (:stopIds) ORDER BY :stopIds")
-    fun getSelected(stopIds: List<Int>): List<Stop>
+    fun getSelectedImmediate(stopIds: List<Int>): List<Stop>
+
+    @Query("SELECT * FROM stop WHERE id IN (:stopIds) ORDER BY :stopIds")
+    fun getSelected(stopIds: List<Int>): LiveData<List<Stop>>
 }

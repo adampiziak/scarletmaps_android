@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
 import com.example.scarletmaps.data.models.route.Route
+import com.example.scarletmaps.data.models.stop.Stop
 
 @Dao
 interface RouteDao {
@@ -23,4 +24,7 @@ interface RouteDao {
 
     @Query("SELECT * FROM route")
     fun getAllImmediate(): List<Route>
+
+    @Query("SELECT * FROM route WHERE id IN (:routeIds) ORDER BY :routeIds")
+    fun getSelected(routeIds: List<Int>): LiveData<List<Route>>
 }

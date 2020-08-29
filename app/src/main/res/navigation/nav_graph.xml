@@ -9,40 +9,38 @@
         android:label="FragmentNearMe"
         tools:layout="@layout/nearby">
         <action
-            android:id="@+id/action_fragmentNearMe_to_routeView"
-            app:destination="@id/routeView" />
+            android:id="@+id/action_fragmentNearMe_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
+        <action
+            android:id="@+id/action_fragmentNearMe_to_openStop"
+            app:destination="@id/openStop" />
     </fragment>
     <fragment
         android:id="@+id/fragmentRouteList"
         android:name="com.example.scarletmaps.ui.routelist.RouteList"
         android:label="FragmentRouteList"
-        tools:layout="@layout/routelist">
-        <action
-            android:id="@+id/action_fragmentRouteList_to_routeView"
-            app:destination="@id/routeView" />
-    </fragment>
+        tools:layout="@layout/routelist"/>
     <fragment
         android:id="@+id/fragmentStopList"
         android:name="com.example.scarletmaps.ui.stoplist.StopList"
         android:label="FragmentStopList"
-        tools:layout="@layout/stoplist"/>
-    <fragment
-        android:id="@+id/home"
-        tools:layout="@layout/home"
-        android:name="com.example.scarletmaps.ui.home.Home"
-        android:label="Home" />
-    <fragment
-        android:id="@+id/routeView"
-        android:name="com.example.scarletmaps.ui.routeviewer.RouteViewer"
-        android:label="RouteView"
-        tools:layout="@layout/routeview">
+        tools:layout="@layout/stoplist">
         <action
-            android:id="@+id/action_routeView_to_fragmentRouteList"
-            app:destination="@id/fragmentRouteList" />
+            android:id="@+id/action_fragmentStopList_to_openStop"
+            app:destination="@id/openStop" />
     </fragment>
     <fragment
-        android:id="@+id/buildingList"
-        tools:layout="@layout/buildinglist"
-        android:name="com.example.scarletmaps.ui.buildinglist.BuildingList"
-        android:label="BuildingList" />
+        android:id="@+id/mapsFragment"
+        android:name="com.example.scarletmaps.ui.openroute.OpenRoute"
+        android:label="fragment_maps"
+        tools:layout="@layout/fragment_maps" >
+        <action
+            android:id="@+id/action_mapsFragment_to_openStop"
+            app:destination="@id/openStop" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_stop_open"
+        android:id="@+id/openStop"
+        android:name="com.example.scarletmaps.ui.openstop.OpenStop"
+        android:label="OpenStop" />
 </navigation>

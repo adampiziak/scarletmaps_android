@@ -7,5 +7,7 @@ import androidx.room.PrimaryKey
 data class Route(@PrimaryKey val id: Int,
                  val name: String,
                  val active: Boolean,
+                 val color: String?,
                  val areas: List<String>,
+                 val segments: List<Int>,
                  val stops: List<Int>)

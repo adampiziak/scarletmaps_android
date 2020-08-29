@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    android:focusable="false"
+    android:id="@+id/nearby_route_root"
     android:layout_height="wrap_content"
     android:layout_width="wrap_content"
     android:orientation="horizontal"

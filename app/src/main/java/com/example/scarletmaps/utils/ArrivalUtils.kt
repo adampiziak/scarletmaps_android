@@ -18,6 +18,20 @@ class ArrivalUtils {
             return "$timeTo min"
         }
 
-        return ".."
+        return "..."
+    }
+
+    fun getMinutesToNextBus(arrival: List<Long>): Int {
+        val now: Long = Instant.now().toEpochMilli()
+        arrival.forEach {
+            val difference = it - now
+            if (difference < 0) {
+                return@forEach
+            }
+
+            return ceil((difference.toDouble() / 1000) / 60).toInt()
+        }
+
+        return Int.MAX_VALUE
     }
 }
