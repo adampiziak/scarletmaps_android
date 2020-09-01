@@ -54,7 +54,10 @@ class Nearby : Fragment() {
         val epoxyRecyclerView = v.findViewById<EpoxyRecyclerView>(R.id.nearby_epoxy)
         val controller = NearbyController()
         epoxyRecyclerView.setController(controller)
-        epoxyRecyclerView.itemAnimator = null
+        epoxyRecyclerView.itemAnimator = FadeInAnimator().apply {
+            addDuration = 150
+            removeDuration = 50
+        }
 
         var items = 0
         // Update controller when location changes
@@ -129,8 +132,16 @@ class Nearby : Fragment() {
             val sortedNearbyRouteList = nearbyRouteList.sortedBy { it.timeTo }
 
             // Set controller data
+            val previousSize = items
             items = nearbyStopList.size + nearbyBuildingList.size
-
+            if (previousSize == 0) {
+                epoxyRecyclerView.itemAnimator = null
+            } else {
+                epoxyRecyclerView.itemAnimator = FadeInAnimator().apply {
+                    addDuration = 150
+                    removeDuration = 50
+                }
+            }
             controller.routes = sortedNearbyRouteList
             controller.stops = nearbyStopList
             controller.places = nearbyBuildingList

@@ -11,6 +11,7 @@ import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
 import com.example.scarletmaps.R
 import com.example.scarletmaps.data.models.stop.Stop
+import com.example.scarletmaps.utils.TextUtils
 
 @EpoxyModelClass(layout = R.layout.view_holder_stop_item)
 abstract class StopItemModel : EpoxyModelWithHolder<StopItemModel.Holder>() {
@@ -22,7 +23,7 @@ abstract class StopItemModel : EpoxyModelWithHolder<StopItemModel.Holder>() {
         super.bind(holder)
         with(stop) {
             holder.name.text = name
-            holder.area.text = area
+            holder.area.text = TextUtils().capitalizeWords(area)
             holder.root.setOnClickListener {
                 it.findNavController().navigate(R.id.openStop, bundleOf("id" to stop.id))
             }

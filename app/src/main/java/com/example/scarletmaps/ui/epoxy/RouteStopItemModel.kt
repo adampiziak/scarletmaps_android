@@ -30,11 +30,6 @@ abstract class RouteStopItemModel : EpoxyModelWithHolder<RouteStopItemModel.Hold
             holder.name.text = name
             holder.times.text = createArrivalMessage(arrivals)
             //holder.stop_position.text = stop_index.toString()
-            if (excludeDivider) {
-                holder.divider.visibility = View.GONE
-            } else {
-                holder.divider.visibility = View.VISIBLE
-            }
         }
     }
 
@@ -42,13 +37,11 @@ abstract class RouteStopItemModel : EpoxyModelWithHolder<RouteStopItemModel.Hold
         lateinit var name: TextView
         lateinit var times: TextView
         lateinit var stop_position: TextView
-        lateinit var divider: View
 
         override fun bindView(itemView: View) {
             name = itemView.findViewById(R.id.routestop_name)
             times = itemView.findViewById(R.id.routestop_times)
             //stop_position = itemView.findViewById(R.id.routestop_position)
-            divider = itemView.findViewById(R.id.routestop_divider)
 
         }
     }

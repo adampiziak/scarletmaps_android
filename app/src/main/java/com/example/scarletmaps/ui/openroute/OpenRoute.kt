@@ -1,16 +1,20 @@
 package com.example.scarletmaps.ui.openroute
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -18,6 +22,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.example.scarletmaps.R
 import com.example.scarletmaps.data.models.Vehicle
@@ -28,9 +33,12 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.maps.android.PolyUtil
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlin.math.min
+import kotlin.math.roundToInt
 
 
 @AndroidEntryPoint
@@ -57,6 +65,7 @@ class OpenRoute : Fragment() {
         }
     }
 
+    @SuppressLint("MissingPermission")
     private val callback = OnMapReadyCallback { googleMap ->
         // Retrieve location updates if user has granted permission
         val finePermission: Int = ActivityCompat.checkSelfPermission(
@@ -194,14 +203,64 @@ class OpenRoute : Fragment() {
 
             //viewAdapter.setStops(it)
         })
-
+        val bottomSheetView = v.findViewById<LinearLayout>(R.id.route_open_bottom_sheet)
         viewModel.arrivals.observe(viewLifecycleOwner, Observer {
             //viewAdapter.setArrivals(it)
             Log.d("ADAMSKI", "setting ${it.size} arrivals")
             controller.arrivals = ArrayList(it)
         })
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetView)
+        bottomSheetBehavior.apply {
+            halfExpandedRatio = 0.5f
+            isFitToContents = false
+        }
+
+        val header = v.findViewById<LinearLayout>(R.id.route_info)
+        header.setOnClickListener {
+            if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            } else {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+            Log.d("ADAMSKI", bottomSheetBehavior.state.toString())
+        }
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        val mapContainer = v.findViewById<FrameLayout>(R.id.map_container)
+        val initialY = dpToPx(90)
+        val bottomSheetElevation = dpToPx(16)
+
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                val progress = 1.0f - slideOffset
+                mapContainer.alpha = 2f - slideOffset * 2
+                mapContainer.y = -slideOffset * 300
+                if (slideOffset > 0.9f) {
+                    bottomSheet.elevation = bottomSheetElevation * 10f * progress
+                } else {
+                    bottomSheet.elevation = bottomSheetElevation.toFloat()
+                }
+            }
+        })
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val offset = recyclerView.computeVerticalScrollOffset()
+                header.elevation = min((offset * 0.05), 20.0).toFloat()
+            }
+        })
+
 
         return v
+    }
+
+    fun dpToPx(dp: Int): Int {
+        val displayMetrics: DisplayMetrics = requireContext().resources.displayMetrics
+        return (dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)).roundToInt().toInt()
     }
 
     fun pxToDp(px: Int): Int {

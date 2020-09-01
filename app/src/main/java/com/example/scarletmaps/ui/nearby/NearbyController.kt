@@ -10,6 +10,8 @@ import com.example.scarletmaps.messageNoNearbyTransport
 import com.example.scarletmaps.ui.epoxy.*
 import com.example.scarletmaps.ui.nearby.views.routeContainer
 
+val NEARBY_PLACE_ID = 4000
+
 // Epoxy controller for Nearby fragment
 class NearbyController : AsyncEpoxyController() {
 
@@ -39,7 +41,7 @@ class NearbyController : AsyncEpoxyController() {
         if (places.isNotEmpty()) {
 
             nearbyPlace {
-                id(places[0].id)
+                id(NEARBY_PLACE_ID)
                 place(places[0])
             }
         } else {

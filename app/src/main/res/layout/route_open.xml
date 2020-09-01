@@ -1,46 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
-    android:background="#EEF"
+    android:background="#FFF"
+    android:id="@+id/route_open_root"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <FrameLayout
+        android:id="@+id/map_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="200dp"
-        tools:context=".ui.openroute.OpenRoute" />
-
+        android:layout_height="match_parent">
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".ui.openroute.OpenRoute" />
+    </FrameLayout>
 
     <LinearLayout
+        android:id="@+id/route_open_bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        app:behavior_peekHeight="200dp"
+        app:behavior_peekHeight="100dp"
         app:behavior_hideable="false"
-
-        android:background="#FFF"
+        android:elevation="16dp"
+        android:paddingHorizontal="5dp"
+        android:background="@drawable/route_open_bottom_sheet"
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/route_info"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#FFF"
-            android:elevation="1dp"
+            android:layout_height="100dp"
+            android:background="@drawable/route_open_bottom_sheet"
+            android:elevation="5dp"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/route_open_name"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:textColor="#222"
                 android:text="Route Weekend 1"
-                android:paddingVertical="14dp"
-                android:paddingHorizontal="20dp"
+                android:paddingHorizontal="30dp"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 />
@@ -48,11 +56,12 @@
             <TextView
                 android:id="@+id/route_open_areas"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_vertical"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:textColor="#000"
-                android:paddingHorizontal="20dp"
-                android:paddingBottom="16dp"
+                android:paddingHorizontal="30dp"
                 android:text="College Ave, Cook Douglas, Livingston, Busch"
                 android:textSize="16sp"
                 />
@@ -64,7 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="#F5F5F5"
+            android:background="#FFF"
             android:paddingBottom="20dp" />
 
     </LinearLayout>
