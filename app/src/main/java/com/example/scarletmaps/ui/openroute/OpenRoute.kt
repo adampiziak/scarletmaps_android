@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
@@ -19,6 +20,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getDrawable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -36,7 +38,9 @@ import com.google.android.gms.maps.model.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.maps.android.PolyUtil
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.route_open.*
 import javax.inject.Inject
+import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 
@@ -224,21 +228,45 @@ class OpenRoute : Fragment() {
             }
             Log.d("ADAMSKI", bottomSheetBehavior.state.toString())
         }
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        val mapContainer = v.findViewById<FrameLayout>(R.id.map_container)
-        val initialY = dpToPx(90)
-        val bottomSheetElevation = dpToPx(16)
 
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        val mapContainer = v.findViewById<FrameLayout>(R.id.map_container)
+
+
+        val bottomSheetElevation = dpToPx(16)
+        var initialSlideOffset: Float = -1f
+        val headerHeight = dpToPx(100).toFloat()
+        mapContainer.translationY = -headerHeight
         bottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    val headerDrawable =
+                        getDrawable(requireContext(), R.drawable.route_open_bottom_sheet_expanded)
 
+                    if (headerDrawable != null) {
+                        header.background = headerDrawable
+                    }
+                } else {
+                    val headerDrawable =
+                        getDrawable(requireContext(), R.drawable.route_open_bottom_sheet)
+
+                    if (headerDrawable != null) {
+                        header.background = headerDrawable
+                        header.translationZ = 0f
+                    }
+                }
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 val progress = 1.0f - slideOffset
-                mapContainer.alpha = 2f - slideOffset * 2
-                mapContainer.y = -slideOffset * 300
+                mapContainer.alpha = min(2f - slideOffset * 2, 1f)
+                if (initialSlideOffset == -1f) {
+                    initialSlideOffset = slideOffset
+                    return
+                }
+                val offset = slideOffset - initialSlideOffset
+                mapContainer.translationY = -offset*400 - headerHeight
                 if (slideOffset > 0.9f) {
                     bottomSheet.elevation = bottomSheetElevation * 10f * progress
                 } else {
@@ -246,11 +274,15 @@ class OpenRoute : Fragment() {
                 }
             }
         })
+        val headerElevation = dpToPx(6).toFloat()
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            override fun onScrolled(recyclerViewRef: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val offset = recyclerView.computeVerticalScrollOffset()
-                header.elevation = min((offset * 0.05), 20.0).toFloat()
+                val min = min((offset*0.025).toFloat(), 20f)
+                header.translationZ = min
+
+                Log.d("ADAMSKI", min.toString())
             }
         })
 

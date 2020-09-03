@@ -1,6 +1,7 @@
 package com.example.scarletmaps.ui.openstop
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,11 +31,17 @@ class OpenStop: Fragment() {
 
         viewModel.stop.observe(viewLifecycleOwner, Observer {stop ->
             toolbar.text = stop.name
+            Log.d("ADAMSKI", "stop ${stop.id}")
         })
 
         viewModel.routes.observe(viewLifecycleOwner, Observer {routeList ->
             val activeRoutes = routeList.filter { it.active }
             controller.routes = activeRoutes
+        })
+
+        viewModel.arrivals.observe(viewLifecycleOwner, Observer {arrivalList ->
+            controller.arrivals = arrivalList
+
         })
 
         return v

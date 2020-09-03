@@ -140,7 +140,7 @@ class ScarletMapsRepository @Inject constructor(
             routeArrivalsStatus[id] = MutableLiveData(NetworkStatus.SUCCESS)
         }
         routeArrivalsStatus[id] = MutableLiveData(NetworkStatus.LOADING)
-        scarletmapsService.arrivals(id).enqueue(object : Callback<List<Arrival>> {
+        scarletmapsService.routeArrivals(id).enqueue(object : Callback<List<Arrival>> {
             override fun onFailure(call: Call<List<Arrival>>, t: Throwable) {
 
             }
@@ -157,6 +157,24 @@ class ScarletMapsRepository @Inject constructor(
         })
     }
 
+    fun refreshStopArrivals(id: Int) {
+        scarletmapsService.stopArrivals(id).enqueue(object : Callback<List<Arrival>> {
+            override fun onFailure(call: Call<List<Arrival>>, t: Throwable) {
+
+            }
+
+            override fun onResponse(call: Call<List<Arrival>>, response: Response<List<Arrival>>) {
+                val arrivals = response.body()
+                if (arrivals != null) {
+                    for (arrival in response.body()!!) {
+                        arrivalDao.save(arrival)
+                        Log.d("ADAMSKI", "SAVING ${arrival.route_id}, ${arrival.stop_id}")
+                    }
+                }
+            }
+        })
+    }
+
     fun getRouteVehicles(id: Int, callback: Callback<List<Vehicle>>) {
         scarletmapsService.vehicles(id).enqueue(callback)
     }
@@ -164,6 +182,11 @@ class ScarletMapsRepository @Inject constructor(
     fun getRouteArrivals(id: Int): LiveData<List<Arrival>> {
         val route = routeDao.get(id)
         return arrivalDao.getSelected(route.id, route.stops)
+    }
+
+    fun getStopArrivals(id: Int): LiveData<List<Arrival>> {
+        val stop = stopDao.loadImmediate(id)
+        return arrivalDao.getStopRoutes(stop.id, stop.routes)
     }
 
     fun getRouteArrivalsStatus(route: Route): MutableLiveData<NetworkStatus>? {

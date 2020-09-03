@@ -16,6 +16,9 @@ interface ArrivalDao {
     @Query("SELECT * FROM arrival WHERE route_id = :routeId AND stop_id IN (:stopIds)")
     fun getSelected(routeId: Int, stopIds: List<Int>): LiveData<List<Arrival>>
 
+    @Query("SELECT * FROM arrival WHERE stop_id = :stopId AND route_id IN (:routeIds)")
+    fun getStopRoutes(stopId: Int, routeIds: List<Int>): LiveData<List<Arrival>>
+
     @Query("SELECT * FROM arrival WHERE route_id = :routeId AND stop_id = :stopId")
     fun getPair(routeId: Int, stopId: Int): Arrival?
 

@@ -30,11 +30,7 @@ class OpenRouteController(routeInitial: Route): AsyncEpoxyController() {
         stopByArea.forEachIndexed { i, lists ->
             val models = lists.mapIndexed { index, stop ->
                 val times = arrivals.find { it.stop_id == stop.id }
-                val arrivalTimes = if (times != null) {
-                    times.arrivals
-                } else {
-                    emptyList<Long>()
-                }
+                val arrivalTimes = times?.arrivals ?: emptyList()
                 RouteStopItemModel_().apply {
                     id(stop.id)
                     stop(stop)

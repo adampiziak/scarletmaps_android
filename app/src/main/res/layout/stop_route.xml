@@ -6,10 +6,15 @@
     <data>
         <variable name="presenter" type="com.example.scarletmaps.ui.openstop.OpenStopPresenter"/>
         <variable name="route" type="com.example.scarletmaps.data.models.route.Route" />
+        <variable name="areas" type="String" />
+        <variable name="arrivals" type="String" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
          android:layout_width="match_parent"
         android:padding="20dp"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginVertical="10dp"
+        android:background="@drawable/nearby_stop_item_background"
         android:onClick="@{(v) -> presenter.navigate(v, route.id)}"
         android:layout_height="wrap_content">
 
@@ -19,7 +24,31 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Route LX"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="#000"
             android:text="@{route.name}"
+            />
+
+        <TextView
+            android:id="@+id/stopRouteAreas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/stopRouteName"
+            android:layout_marginTop="5dp"
+            tools:text="College Ave, Livingston"
+            android:text="@{areas}"
+            />
+        <TextView
+            android:id="@+id/stopRouteArrivals"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/stopRouteAreas"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            tools:text="5 min, 10 min"
+            android:textColor="@color/colorPrimary"
+            android:text="@{arrivals}"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

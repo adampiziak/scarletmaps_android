@@ -20,7 +20,10 @@ interface ScarletMapsService {
     fun getStops(): Call<List<Stop>>
 
     @GET("route_arrivals/{id}")
-    fun arrivals(@Path("id") id: Int): Call<List<Arrival>>
+    fun routeArrivals(@Path("id") id: Int): Call<List<Arrival>>
+
+    @GET("stop_arrivals/{id}")
+    fun stopArrivals(@Path("id") id: Int): Call<List<Arrival>>
 
     @GET("buildings")
     fun buildings(): Call<List<Building>>
