@@ -10,10 +10,10 @@
         tools:layout="@layout/nearby">
         <action
             android:id="@+id/action_fragmentNearMe_to_mapsFragment"
-            app:destination="@id/mapsFragment" />
+            app:destination="@id/fragmentRouteOpen" />
         <action
             android:id="@+id/action_fragmentNearMe_to_openStop"
-            app:destination="@id/openStop" />
+            app:destination="@id/fragmentOpenStop" />
     </fragment>
     <fragment
         android:id="@+id/fragmentRouteList"
@@ -27,20 +27,20 @@
         tools:layout="@layout/stoplist">
         <action
             android:id="@+id/action_fragmentStopList_to_openStop"
-            app:destination="@id/openStop" />
+            app:destination="@id/fragmentOpenStop" />
     </fragment>
     <fragment
-        android:id="@+id/mapsFragment"
+        android:id="@+id/fragmentRouteOpen"
         android:name="com.example.scarletmaps.ui.openroute.OpenRoute"
         android:label="fragment_maps"
-        tools:layout="@layout/fragment_maps" >
+        tools:layout="@layout/route_open" >
         <action
             android:id="@+id/action_mapsFragment_to_openStop"
-            app:destination="@id/openStop" />
+            app:destination="@id/fragmentOpenStop" />
     </fragment>
     <fragment
         tools:layout="@layout/fragment_stop_open"
-        android:id="@+id/openStop"
+        android:id="@+id/fragmentOpenStop"
         android:name="com.example.scarletmaps.ui.openstop.OpenStop"
         android:label="OpenStop" />
 </navigation>

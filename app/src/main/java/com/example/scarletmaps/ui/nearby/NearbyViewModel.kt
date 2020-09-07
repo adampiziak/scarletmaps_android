@@ -13,20 +13,28 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class NearbyViewModel @ViewModelInject constructor(val repository: ScarletMapsRepository) : ViewModel() {
-    val buildings: ArrayList<Building> = repository.getBuildingList()
-    val routes: ArrayList<Route> = repository.getRouteListImmediate()
-    val stops: List<Stop> = repository.getStopListImmediate()
+    val buildings: LiveData<List<Building>> = repository.getBuildingList()
+    val routes: LiveData<List<Route>> = repository.getRouteList()
+    val stops: LiveData<List<Stop>> = repository.getStopList()
+
+    val buildingsInitial: List<Building> = repository.getBuildingListImmediate()
+    val routesInitial: List<Route> = repository.getRouteListImmediate()
+    val stopsInitial: List<Stop> = repository.getStopListImmediate()
 
     fun getArrivalPair(route: Int, stop: Int): Arrival? {
         return repository.getArrivalPair(route, stop)
     }
 
+    fun refreshArrivals() {
+        repository.getRouteListImmediate().filter { it.active }.forEach { route ->
+            repository.refreshRouteArrivals(route.id)
+        }
+    }
+
     init {
         viewModelScope.launch {
             while (true) {
-                repository.getRouteListImmediate().filter { it.active }.forEach { route ->
-                    repository.refreshRouteArrivals(route.id)
-                }
+                refreshArrivals()
                 delay(30000)
             }
         }

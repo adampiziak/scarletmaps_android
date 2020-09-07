@@ -22,11 +22,14 @@ class BuildingList : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val v = inflater.inflate(R.layout.buildinglist, container, false)
+        /*
         val recyclerView = v.findViewById<RecyclerView>(R.id.buildingListRecyclerView)
         recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)
             adapter = BuildingListAdapter(ArrayList(viewModel.buildingList.sortedBy { it.name }))
         }
+
+         */
         return v
     }
 }

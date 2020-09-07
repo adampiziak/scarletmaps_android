@@ -1,5 +1,6 @@
 package com.example.scarletmaps.ui.openstop
 
+import android.graphics.Color
 import android.util.Log
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.example.scarletmaps.data.models.arrival.Arrival
@@ -24,7 +25,7 @@ class OpenStopController: AsyncEpoxyController()  {
 
     override fun buildModels() {
         routes.forEach { route ->
-            val areas = route.areas.map { TextUtils().capitalizeWords(it) }.joinToString { "${it}" }
+            val areas = route.areas.map { TextUtils().capitalizeWords(it) }.joinToString { it }
             val times = arrivals.find { it.route_id == route.id }
             val arrivalTimes = times?.arrivals ?: emptyList()
             val arrivalText = ArrivalUtils().createArrivalsMessage(arrivalTimes)

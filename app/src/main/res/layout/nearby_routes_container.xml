@@ -4,7 +4,8 @@
     android:paddingHorizontal="20dp"
     android:layout_marginBottom="20dp"
     android:scrollbars="none"
-    android:layout_width="wrap_content" android:layout_height="50dp">
+    android:clipToPadding="false"
+    android:layout_width="match_parent" android:layout_height="50dp">
     <LinearLayout
         android:id="@+id/epoxy_model_group_child_container"
         android:orientation="horizontal" android:layout_width="wrap_content"

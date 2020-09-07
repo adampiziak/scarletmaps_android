@@ -40,13 +40,20 @@ class ScarletMapsRepository @Inject constructor(
     private val routeArrivalsStatus: HashMap<Int, MutableLiveData<NetworkStatus>> = HashMap()
 
     init {
-        arrivalDao.clear()
+        validateBuildingList()
+        validateStopList()
+        validateRouteList()
     }
 
-    fun getBuildingList(): ArrayList<Building> {
+    fun getBuildingList(): LiveData<List<Building>> {
         validateBuildingList()
-        return ArrayList(buildingDao.allImmediate())
+        return buildingDao.all()
     }
+
+    fun getBuildingListImmediate(): List<Building> {
+        return buildingDao.allImmediate()
+    }
+
 
     fun getStop(id: Int): LiveData<Stop> {
         return stopDao.load(id)
@@ -70,6 +77,7 @@ class ScarletMapsRepository @Inject constructor(
                         }
                         dataUtils.setBuildingListUpdateTime()
                     }
+                    Log.d("ADAMSKI", "building size: ${buildingDao.allImmediate().size}")
                 }
             })
         }

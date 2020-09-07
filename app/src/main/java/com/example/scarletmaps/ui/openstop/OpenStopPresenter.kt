@@ -7,8 +7,8 @@ import com.example.scarletmaps.R
 import javax.inject.Singleton
 
 @Singleton
-class OpenStopPresenter {
+class OpenStopPresenter() {
     fun navigate(v: View, id: Int) {
-        v.findNavController().navigate(R.id.mapsFragment, bundleOf("id" to id))
+        v.findNavController().navigate(R.id.fragmentRouteOpen, bundleOf("id" to id))
     }
 }

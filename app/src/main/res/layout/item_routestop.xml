@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/route_stop_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/nearby_stop_item_background"
@@ -9,24 +10,8 @@
     android:clickable="true"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!--
     <TextView
-        android:id="@+id/routestop_position"
-        android:layout_width="20dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:gravity="center_vertical|center_horizontal"
-        android:layout_marginEnd="15dp"
-        android:layout_marginStart="20dp"
-        android:paddingVertical="5dp"
-        android:textStyle="bold"
-        tools:text="12"/>
-    -->
-
-    <TextView
-        android:id="@+id/routestop_name"
+        android:id="@+id/route_stop_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="15dp"
@@ -35,12 +20,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:textColor="#000"
-        android:lineHeight="24sp"
         android:textSize="16sp"
         tools:text="Scott Hall" />
 
     <TextView
-        android:id="@+id/routestop_times"
+        android:id="@+id/route_stop_times"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="Arriving in 10 min, 15min"
@@ -49,7 +33,7 @@
         android:paddingBottom="15dp"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/routestop_name"/>
+        app:layout_constraintTop_toBottomOf="@id/route_stop_name"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

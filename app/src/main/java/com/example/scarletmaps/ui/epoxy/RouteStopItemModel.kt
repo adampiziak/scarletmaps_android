@@ -2,12 +2,14 @@ package com.example.scarletmaps.ui.epoxy
 
 import android.view.View
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.os.bundleOf
+import androidx.navigation.findNavController
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyHolder
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
 import com.example.scarletmaps.R
-import com.example.scarletmaps.data.models.arrival.Arrival
 import com.example.scarletmaps.data.models.stop.Stop
 import java.time.Instant
 import kotlin.math.ceil
@@ -20,7 +22,7 @@ abstract class RouteStopItemModel : EpoxyModelWithHolder<RouteStopItemModel.Hold
     @EpoxyAttribute
     lateinit var arrivals: List<Long>
     @EpoxyAttribute
-    var stop_index: Int = 0
+    var stopIndex: Int = 0
     @EpoxyAttribute
     var excludeDivider = false
 
@@ -29,24 +31,28 @@ abstract class RouteStopItemModel : EpoxyModelWithHolder<RouteStopItemModel.Hold
         with(stop) {
             holder.name.text = name
             holder.times.text = createArrivalMessage(arrivals)
-            //holder.stop_position.text = stop_index.toString()
+            holder.root.setOnClickListener {
+                it.findNavController().navigate(R.id.fragmentOpenStop, bundleOf("id" to stop.id))
+
+            }
+
+
         }
     }
 
     class Holder : EpoxyHolder() {
+        lateinit var root: ConstraintLayout
         lateinit var name: TextView
         lateinit var times: TextView
-        lateinit var stop_position: TextView
 
         override fun bindView(itemView: View) {
-            name = itemView.findViewById(R.id.routestop_name)
-            times = itemView.findViewById(R.id.routestop_times)
-            //stop_position = itemView.findViewById(R.id.routestop_position)
-
+            name = itemView.findViewById(R.id.route_stop_name)
+            times = itemView.findViewById(R.id.route_stop_times)
+            root = itemView.findViewById(R.id.route_stop_root)
         }
     }
 
-    fun createArrivalMessage(arrival: List<Long>): String {
+    private fun createArrivalMessage(arrival: List<Long>): String {
         var message = ""
         var validTimes = 0
         arrival.forEachIndexed { i, a ->

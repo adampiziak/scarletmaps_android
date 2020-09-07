@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.example.scarletmaps.R
+import com.example.scarletmaps.utils.TextUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,14 +25,15 @@ class OpenStop: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val v = inflater.inflate(R.layout.fragment_stop_open, container, false)
-        val toolbar: TextView = v.findViewById(R.id.open_stop_title)
+        val title: TextView = v.findViewById(R.id.open_stop_title)
+        val area: TextView = v.findViewById(R.id.open_stop_area)
         val epoxyRecyclerView: EpoxyRecyclerView = v.findViewById(R.id.openStopEpoxy)
         val controller = OpenStopController()
         epoxyRecyclerView.setController(controller)
 
         viewModel.stop.observe(viewLifecycleOwner, Observer {stop ->
-            toolbar.text = stop.name
-            Log.d("ADAMSKI", "stop ${stop.id}")
+            title.text = stop.name
+            area.text = TextUtils().capitalizeWords(stop.area)
         })
 
         viewModel.routes.observe(viewLifecycleOwner, Observer {routeList ->
@@ -41,7 +43,6 @@ class OpenStop: Fragment() {
 
         viewModel.arrivals.observe(viewLifecycleOwner, Observer {arrivalList ->
             controller.arrivals = arrivalList
-
         })
 
         return v

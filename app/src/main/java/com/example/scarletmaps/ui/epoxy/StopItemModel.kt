@@ -25,7 +25,7 @@ abstract class StopItemModel : EpoxyModelWithHolder<StopItemModel.Holder>() {
             holder.name.text = name
             holder.area.text = TextUtils().capitalizeWords(area)
             holder.root.setOnClickListener {
-                it.findNavController().navigate(R.id.openStop, bundleOf("id" to stop.id))
+                it.findNavController().navigate(R.id.fragmentOpenStop, bundleOf("id" to stop.id))
             }
         }
     }

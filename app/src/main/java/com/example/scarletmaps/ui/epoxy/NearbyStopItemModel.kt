@@ -1,5 +1,6 @@
 package com.example.scarletmaps.ui.epoxy
 
+import android.provider.Settings.Global.getString
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -11,6 +12,7 @@ import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
 import com.example.scarletmaps.R
 import com.example.scarletmaps.data.models.stop.Stop
+import com.example.scarletmaps.utils.TextUtils
 import kotlin.math.roundToInt
 
 @EpoxyModelClass(layout = R.layout.nearby_stop_item)
@@ -31,11 +33,12 @@ abstract class NearbyStopItemModel: EpoxyModelWithHolder<NearbyStopItemModel.Hol
 
     override fun bind(holder: Holder) {
         super.bind(holder)
+        val distanceText = "${distance.roundToInt()} m"
         holder.nameText.text = name
-        holder.areaText.text = area.capitalize()
-        holder.distanceText.text = "${distance.roundToInt()} m"
+        holder.areaText.text = TextUtils().capitalizeWords(area)
+        holder.distanceText.text = distanceText
         holder.root.setOnClickListener {
-            it.findNavController().navigate(R.id.openStop, bundleOf("id" to stop.id))
+            it.findNavController().navigate(R.id.fragmentOpenStop, bundleOf("id" to stop.id))
         }
     }
 

@@ -7,4 +7,6 @@
     <string name="bottom_nav_stops_title">Stops</string>
     <string name="bottom_nav_buildings_title">Buildings</string>
     <string name="message_no_active_transport_nearby">no active stops or routes near you</string>
+    <string name="message_location_permission">Hello! Detecting nearby buildings, stops and routes requires location permissions</string>
+    <string name="message_location_button">Enable Location</string>
 </resources>

@@ -1,16 +1,11 @@
 package com.example.scarletmaps.ui.nearby
 
-import com.airbnb.epoxy.AsyncEpoxyController
-import com.airbnb.epoxy.Carousel
-import com.airbnb.epoxy.CarouselModel_
-import com.example.scarletmaps.data.models.route.Route
+import com.airbnb.epoxy.*
 import com.example.scarletmaps.data.models.stop.Stop
 import com.example.scarletmaps.messageNoNearbyPlaces
 import com.example.scarletmaps.messageNoNearbyTransport
 import com.example.scarletmaps.ui.epoxy.*
 import com.example.scarletmaps.ui.nearby.views.routeContainer
-
-val NEARBY_PLACE_ID = 4000
 
 // Epoxy controller for Nearby fragment
 class NearbyController : AsyncEpoxyController() {
@@ -21,6 +16,7 @@ class NearbyController : AsyncEpoxyController() {
         field = value
         requestModelBuild()
     }
+    private var previousOrder: ArrayList<Int> = ArrayList()
 
     // Active bus stops within 500m of user
     var stops: List<Pair<Stop, Float>> = emptyList()
@@ -41,7 +37,7 @@ class NearbyController : AsyncEpoxyController() {
         if (places.isNotEmpty()) {
 
             nearbyPlace {
-                id(NEARBY_PLACE_ID)
+                id("nearby building widget")
                 place(places[0])
             }
         } else {
@@ -53,8 +49,10 @@ class NearbyController : AsyncEpoxyController() {
                 NearbyRouteItemModel_().id(it.id).route(it)
             }
             if (routeModels.isNotEmpty()) {
+                routeContainer(routeModels) {
+                    id("route container")
+                }
                 Carousel.setDefaultGlobalSnapHelperFactory(null)
-                CarouselModel_().id(123123).models(routeModels).padding(Carousel.Padding.dp(20, 0, 0,30, 0)).addTo(this)
             }
                 //CarouselModel_().id(123123).models(routeModels).padding(Carousel.Padding.dp(20, 0, 0,30, 0)).addTo(this)
 

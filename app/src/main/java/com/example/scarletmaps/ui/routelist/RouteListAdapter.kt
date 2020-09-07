@@ -10,12 +10,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.scarletmaps.R
 import com.example.scarletmaps.data.models.route.Route
+import com.example.scarletmaps.utils.TextUtils
 import kotlinx.android.synthetic.main.routelist_viewholder.view.*
 
 class RouteListAdapter(private var routeList: ArrayList<Route>) :
     RecyclerView.Adapter<RouteListAdapter.RouteHolder>() {
 
-    class RouteHolder(private val v: LinearLayout) : RecyclerView.ViewHolder(v) {
+    class RouteHolder(v: LinearLayout) : RecyclerView.ViewHolder(v) {
         val root = v
         val name: TextView = v.route_name
         val areas: TextView = v.route_areas
@@ -48,19 +49,9 @@ class RouteListAdapter(private var routeList: ArrayList<Route>) :
 
     override fun onBindViewHolder(holder: RouteHolder, position: Int) {
         holder.name.text = routeList[position].name
-
-        var areaMessage = ""
-        routeList[position].areas.forEachIndexed { i, a ->
-            if (i == routeList[position].areas.size - 1) {
-                areaMessage += a.split(" ").joinToString(" ") { it.capitalize() }.trimEnd()
-            } else {
-                areaMessage += "${a.split(" ").joinToString(" ") { it.capitalize() }.trimEnd()}, "
-            }
-        }
-
-        holder.areas.text = areaMessage
+        holder.areas.text = routeList[position].areas.joinToString { TextUtils().capitalizeWords(it) }
         holder.itemView.setOnClickListener{ view ->
-            view.findNavController().navigate(R.id.mapsFragment, bundleOf("id" to routeList[position].id), null,  null)
+            view.findNavController().navigate(R.id.fragmentRouteOpen, bundleOf("id" to routeList[position].id), null,  null)
         }
     }
 
