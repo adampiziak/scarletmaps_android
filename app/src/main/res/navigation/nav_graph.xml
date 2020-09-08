@@ -7,12 +7,27 @@
         android:id="@+id/fragmentNearMe"
         android:name="com.example.scarletmaps.ui.nearby.Nearby"
         android:label="FragmentNearMe"
+        app:enterAnim="@anim/fragment_open_enter"
+        app:exitAnim="@anim/fragment_open_exit"
+        app:popEnterAnim="@anim/fragment_open_enter"
+        app:popExitAnim="@anim/fragment_open_exit"
         tools:layout="@layout/nearby">
         <action
-            android:id="@+id/action_fragmentNearMe_to_mapsFragment"
-            app:destination="@id/fragmentRouteOpen" />
+            android:id="@+id/action_fragmentNearMe_to_fragmentOpenRoute"
+            app:destination="@id/fragmentRouteOpen"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_open_enter"
+            app:popExitAnim="@anim/fragment_open_exit" />
         <action
             android:id="@+id/action_fragmentNearMe_to_openStop"
+            app:destination="@id/fragmentOpenStop" />
+        <action
+            android:id="@+id/action_fragmentNearMe_to_fragmentOpenStop"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_open_enter"
+            app:popExitAnim="@anim/fragment_open_exit"
             app:destination="@id/fragmentOpenStop" />
     </fragment>
     <fragment
@@ -42,5 +57,13 @@
         tools:layout="@layout/fragment_stop_open"
         android:id="@+id/fragmentOpenStop"
         android:name="com.example.scarletmaps.ui.openstop.OpenStop"
-        android:label="OpenStop" />
+        android:label="OpenStop" >
+        <action
+            android:id="@+id/action_fragmentOpenStop_to_fragmentRouteOpen"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_open_enter"
+            app:popExitAnim="@anim/fragment_open_exit"
+            app:destination="@id/fragmentRouteOpen" />
+    </fragment>
 </navigation>

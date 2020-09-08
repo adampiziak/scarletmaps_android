@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    android:background="#FFF"
+<androidx.coordinatorlayout.widget.CoordinatorLayout android:background="#DDD"
     android:id="@+id/route_open_root"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
         android:id="@+id/map_container"
+        android:background="#DDD"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".ui.openroute.OpenRoute" />
+
     </FrameLayout>
 
     <LinearLayout
@@ -44,13 +40,11 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
-                xmlns:tools="http://schemas.android.com/tools"
                 android:textColor="#222"
-                android:text="Route Weekend 1"
+                tools:text="Route Weekend 1"
                 android:paddingHorizontal="30dp"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/route_open_areas"
@@ -58,10 +52,9 @@
                 android:layout_height="30dp"
                 android:layout_marginBottom="20dp"
                 android:gravity="center_vertical"
-                xmlns:tools="http://schemas.android.com/tools"
                 android:textColor="#000"
                 android:paddingHorizontal="30dp"
-                android:text="College Ave, Cook Douglas, Livingston, Busch"
+                tools:text="College Ave, Cook Douglas, Livingston, Busch"
                 android:textSize="16sp"
                 />
             <View

@@ -38,7 +38,7 @@ abstract class NearbyStopItemModel: EpoxyModelWithHolder<NearbyStopItemModel.Hol
         holder.areaText.text = TextUtils().capitalizeWords(area)
         holder.distanceText.text = distanceText
         holder.root.setOnClickListener {
-            it.findNavController().navigate(R.id.fragmentOpenStop, bundleOf("id" to stop.id))
+            it.findNavController().navigate(R.id.action_fragmentNearMe_to_fragmentOpenStop, bundleOf("id" to stop.id))
         }
     }
 

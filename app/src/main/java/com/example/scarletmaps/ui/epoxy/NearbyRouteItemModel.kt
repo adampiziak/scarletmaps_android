@@ -39,10 +39,8 @@ abstract  class NearbyRouteItemModel: EpoxyModelWithHolder<NearbyRouteItemModel.
         }
         holder.routeRoot.setOnClickListener {
             it.findNavController().navigate(
-                R.id.fragmentRouteOpen,
-                bundleOf("id" to route.id),
-                null,
-                null
+                R.id.action_fragmentNearMe_to_fragmentOpenRoute,
+                bundleOf("id" to route.id)
             )
         }
     }

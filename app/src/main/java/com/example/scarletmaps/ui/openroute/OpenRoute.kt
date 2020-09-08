@@ -16,23 +16,34 @@ import androidx.core.content.ContextCompat.getDrawable
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.add
+import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.Explode
+import androidx.transition.Fade
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.example.scarletmaps.R
 import com.example.scarletmaps.utils.DisplayUtils
 import com.example.scarletmaps.utils.TextUtils
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.maps.android.PolyUtil
+import com.google.maps.android.ktx.awaitMap
 import dagger.hilt.android.AndroidEntryPoint
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator
+import kotlinx.android.synthetic.main.route_open.*
+import kotlinx.coroutines.*
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
+import kotlin.concurrent.schedule
+import kotlin.math.exp
 import kotlin.math.min
 
 
@@ -64,6 +75,15 @@ class OpenRoute : Fragment() {
         val controller = OpenRouteController()
         epoxyRecyclerView.setController(controller)
 
+        // BottomSheet setup
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetView)
+        var expanded = false
+        bottomSheetBehavior.apply {
+            halfExpandedRatio = 0.5f
+            isFitToContents = false
+            state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        }
+
         // Observe Data from view model
         // Update route info
         viewModel.route.observe(viewLifecycleOwner, Observer { route ->
@@ -74,6 +94,10 @@ class OpenRoute : Fragment() {
         // Update stop list views
         viewModel.stopListByArea.observe(viewLifecycleOwner, Observer {
             controller.stopListByArea = it
+            if (!expanded) {
+                expanded = true
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+            }
         })
 
         // Observe arrival data for route
@@ -81,13 +105,7 @@ class OpenRoute : Fragment() {
             controller.arrivals = ArrayList(it)
         })
 
-        // BottomSheet setup
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetView)
-        bottomSheetBehavior.apply {
-            halfExpandedRatio = 0.5f
-            isFitToContents = false
-            state = BottomSheetBehavior.STATE_HALF_EXPANDED
-        }
+
 
         // On header click, toggle bottom sheet open/close
         header.setOnClickListener {
@@ -132,7 +150,7 @@ class OpenRoute : Fragment() {
                     return
                 }
                 val offset = slideOffset - initialSlideOffset
-                if (offset > 0.1) {
+                if (offset > 0 ) {
                     mapContainer.translationY = -offset * 400
                 }
 
@@ -158,13 +176,22 @@ class OpenRoute : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
 
+        val mapContainer = view.findViewById<FrameLayout>(R.id.map_container)
         // Update map on view model updates
         val callback = OnMapReadyCallback { map ->
 
+            mapContainer.apply {
+                alpha = 0f
+                scaleY = .8f
+                scaleX = 0.8f
+            }.animate().alpha(1f).scaleY(1f).scaleX(1f).setDuration(150).setStartDelay(50).start()
             // Enable current location marker
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
                 map.isMyLocationEnabled = true
             }
 
@@ -180,7 +207,6 @@ class OpenRoute : Fragment() {
                     )
                 }
             })
-
 
 
             // On vehicle list update, update vehicle views
@@ -247,7 +273,15 @@ class OpenRoute : Fragment() {
             })
         }
 
-        mapFragment?.getMapAsync(callback)
+
+        GlobalScope.launch(Dispatchers.Main) {
+            delay(150)
+            val mapFragment = SupportMapFragment()
+            childFragmentManager.commit {
+                add(R.id.map_container, mapFragment)
+            }
+            mapFragment.getMapAsync(callback)
+        }
     }
 
 
