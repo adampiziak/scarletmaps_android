@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout android:background="#DDD"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     android:id="@+id/route_open_root"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="#DDD"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
         android:id="@+id/map_container"
-        android:background="#DDD"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

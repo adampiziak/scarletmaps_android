@@ -51,6 +51,10 @@
         tools:layout="@layout/route_open" >
         <action
             android:id="@+id/action_mapsFragment_to_openStop"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_open_enter"
+            app:popExitAnim="@anim/fragment_open_exit"
             app:destination="@id/fragmentOpenStop" />
     </fragment>
     <fragment

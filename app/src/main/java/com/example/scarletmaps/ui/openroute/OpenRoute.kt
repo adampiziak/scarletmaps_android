@@ -1,6 +1,8 @@
 package com.example.scarletmaps.ui.openroute
 
 import android.Manifest
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
@@ -183,9 +185,9 @@ class OpenRoute : Fragment() {
 
             mapContainer.apply {
                 alpha = 0f
-                scaleY = .8f
-                scaleX = 0.8f
-            }.animate().alpha(1f).scaleY(1f).scaleX(1f).setDuration(150).setStartDelay(50).start()
+                scaleY = 0.95f
+                scaleX = 0.95f
+            }.animate().alpha(1f).scaleY(1f).scaleX(1f).setDuration(150).setStartDelay(20).start()
             // Enable current location marker
             if (ContextCompat.checkSelfPermission(
                     requireContext(),

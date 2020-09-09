@@ -32,7 +32,7 @@ abstract class RouteStopItemModel : EpoxyModelWithHolder<RouteStopItemModel.Hold
             holder.name.text = name
             holder.times.text = createArrivalMessage(arrivals)
             holder.root.setOnClickListener {
-                it.findNavController().navigate(R.id.fragmentOpenStop, bundleOf("id" to stop.id))
+                it.findNavController().navigate(R.id.action_mapsFragment_to_openStop, bundleOf("id" to stop.id))
 
             }
 
