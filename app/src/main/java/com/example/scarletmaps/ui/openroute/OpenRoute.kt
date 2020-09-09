@@ -324,7 +324,9 @@ class OpenRoute : Fragment() {
         }
         if (canBuild) {
             val bounds = builder.build()
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
+            val width = resources.displayMetrics.widthPixels
+            val height = resources.displayMetrics.heightPixels
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, 100))
         }
     }
 }

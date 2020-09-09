@@ -4,16 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="#DDD"
+    android:background="#FFF"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
         android:id="@+id/map_container"
+        android:background="#DDD"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </FrameLayout>
+        android:layout_height="match_parent" />
 
     <LinearLayout
         android:id="@+id/route_open_bottom_sheet"
