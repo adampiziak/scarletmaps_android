@@ -8,9 +8,10 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/map_container"
         android:background="#DDD"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

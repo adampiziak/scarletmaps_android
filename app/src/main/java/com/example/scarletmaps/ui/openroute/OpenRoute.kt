@@ -117,7 +117,7 @@ class OpenRoute : Fragment() {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
         }
-        val mapContainer = v.findViewById<FrameLayout>(R.id.map_container)
+        val mapContainer = v.findViewById<LinearLayout>(R.id.map_container)
 
 
         val bottomSheetElevation = DisplayUtils.dpToPx(16)
@@ -179,15 +179,13 @@ class OpenRoute : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val mapContainer = view.findViewById<FrameLayout>(R.id.map_container)
+        val mapContainer = view.findViewById<LinearLayout>(R.id.map_container)
         // Update map on view model updates
         val callback = OnMapReadyCallback { map ->
 
             mapContainer.apply {
                 alpha = 0f
-                scaleY = 0.95f
-                scaleX = 0.95f
-            }.animate().alpha(1f).scaleY(1f).scaleX(1f).setDuration(150).setStartDelay(20).start()
+            }.animate().alpha(1f).setDuration(200).setStartDelay(20).start()
             // Enable current location marker
             if (ContextCompat.checkSelfPermission(
                     requireContext(),
