@@ -4,7 +4,7 @@
 
 <em>not in active development</em>
 
-ScarletMaps is android application for helping students find their way around Rutgers campuses. Find information important to your location such as bus routes, bus stops and buildings. Locate bus positions and see current paths for bus routes.
+ScarletMaps is android application for helping students find their way around Rutgers campuses. Find information relevant to your location such as bus routes, bus stops and buildings. Locate bus positions and see current paths for bus routes.
 
 ScarletMaps is free and open source. Feel free to contribute or fork :)
 
