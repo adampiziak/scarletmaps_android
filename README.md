@@ -8,20 +8,20 @@ ScarletMaps is android application for helping students find their way around Ru
 
 ScarletMaps is free and open source. Feel free to contribute or fork :)
 
-![demo gif](./media/demo.gif)
+![demo gif](./media/demo2.gif)
 
 ## Architecture
 ScarletMaps utilizes a model-view-viewmodel (MVVM) architecture and is programmed in Kotlin. Dependency injection is managed with Hilt. Data is fetched using Retrofit and stored in a SQLite database using Android Room.  Complex views and lists are generated with Epoxy.
 
 Libraries:
-* Jetpack
- * Room
- * Navigation
- * AppCompat
- * Hilt
-* Retrofit
-* Epoxy
-* Google Maps
+- Jetpack
+  - Room
+  - Navigation
+  - AppCompat
+  - Hilt
+- Retrofit
+- Epoxy
+- Google Maps
 
 ## License
 
